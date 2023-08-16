@@ -62,4 +62,8 @@ public class Wires : MonoBehaviour {
         }
         module.Solve();
     }
+
+    public void ToggleColorblind() {
+        ColorBlindText.gameObject.SetActive(!ColorBlindText.gameObject.activeInHierarchy);
+    }
 }

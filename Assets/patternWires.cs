@@ -14,6 +14,7 @@ public class patternWires : MonoBehaviour {
     public Texture[] ShapeImages;
     public Wires[] Wires;
     public ShapesDisplay[] ShapeDisplays;
+    public KMSelectable ColorblindStatusLight;
 
     string ModuleName;
     static int ModuleIdCounter = 1;
@@ -24,7 +25,7 @@ public class patternWires : MonoBehaviour {
         { Shapes.Triangle, Shapes.Circle, Shapes.Square, Shapes.Star, Shapes.Triangle },
         { Shapes.Star, Shapes.Circle, Shapes.Triangle, Shapes.Triangle, Shapes.Square },
         { Shapes.Square, Shapes.Triangle, Shapes.Circle, Shapes.Triangle, Shapes.Star },
-        { Shapes.Star, Shapes.Square, Shapes.Circle, Shapes.Circle, Shapes.Circle },
+        { Shapes.Star, Shapes.Square, Shapes.Circle, Shapes.Circle, Shapes.Square },
         { Shapes.Circle, Shapes.Square, Shapes.Triangle, Shapes.Circle, Shapes.Star },
         { Shapes.Triangle, Shapes.Triangle, Shapes.Square, Shapes.Star, Shapes.Star },
     };
@@ -34,6 +35,7 @@ public class patternWires : MonoBehaviour {
         ModuleName = Module.ModuleDisplayName;
         ModuleId = ModuleIdCounter++;
         GetComponent<KMBombModule>().OnActivate += Activate;
+        ColorblindStatusLight.OnInteract += delegate () { StatusLightPress(); return false; };
         /*
         foreach (KMSelectable object in keypad) {
             object.OnInteract += delegate () { keypadPress(object); return false; };
@@ -150,6 +152,12 @@ public class patternWires : MonoBehaviour {
         Start();
     }
 
+    void StatusLightPress() {
+        foreach(Wires Wire in Wires) {
+            Wire.ToggleColorblind();
+        }
+    }
+
     void Update () { //Shit that happens at any point after initialization
 
     }
@@ -170,12 +178,15 @@ public class patternWires : MonoBehaviour {
     }
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Use !{0} 12345 to cut the wires in their respective positions.";
+    private readonly string TwitchHelpMessage = @"Use !{0} 12345 to cut the wires in their respective positions. !{0} Colorblind to toggle colorblind mode.";
 #pragma warning restore 414
 
     // Twitch Plays (TP) documentation: https://github.com/samfundev/KtaneTwitchPlays/wiki/External-Mod-Module-Support
 
     KMSelectable[] ProcessTwitchCommand (string Command) {
+        if(Command.ToLower() == "colorblind" || Command.ToLower() == "coworbwind") {
+            return new KMSelectable[] { ColorblindStatusLight };
+        }
         List<KMSelectable> output = new List<KMSelectable>();
         foreach(char i in Command) {
             int f = 0;
