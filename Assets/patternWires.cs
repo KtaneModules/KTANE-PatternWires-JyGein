@@ -59,7 +59,6 @@ public class patternWires : MonoBehaviour {
         if(int.Parse(Bomb.GetSerialNumber().Last().ToString())%2 == 1) {
             Reversed = true;
         }
-
         count = 0;
         count2 = 0;
         foreach(Wires Wire in Wires) {
@@ -139,6 +138,11 @@ public class patternWires : MonoBehaviour {
         }
         foreach(Wires Wire in Wires) {
             if(Wire.Valid) {
+                Log($"Last digit of the Serial Number is {(Reversed ? "odd so the pattern is reversed." : "even so the pattern is not reversed.")}");
+                List<string> correctPattern = new List<string>();
+                for(int i = 0; i<5; i++) { correctPattern.Add(Patterns[_number, i].ToString()); }
+                if(Reversed) { correctPattern.Reverse(); }
+                Log($"Rule number {_number + 1} is correct with the pattern {string.Join(", ", correctPattern.ToArray())}");
                 for(int i = 0; i < 5; i++) {
                     Log($"Wire {i + 1} is colored {Wires[i].Color.ToString()}, is with the shape {ShapeDisplays[i].Shape.ToString()}, and is {(Wires[i].Valid ? "Valid" : "Invalid")}");
                 }
